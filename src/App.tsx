@@ -13,7 +13,7 @@ function App() {
     try {
       setLoading(true);
 
-      const response = await fetchMetrics({ symbols: ["AAPL"] });
+      const response = await fetchMetrics({ symbols: tickers.split(",") });
 
       console.log("response", response);
     } catch (e) {
