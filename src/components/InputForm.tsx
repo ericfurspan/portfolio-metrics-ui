@@ -21,6 +21,7 @@ const InputForm = ({ value, setValue, handleSubmit }: InputFormProps) => {
         p: "3px 6px",
         display: "flex",
         alignItems: "center",
+        width: "100%",
       }}
     >
       <InputBase
@@ -29,6 +30,7 @@ const InputForm = ({ value, setValue, handleSubmit }: InputFormProps) => {
         inputProps={{ "aria-label": "enter ticker symbols" }}
         value={value}
         onChange={handleChange}
+        fullWidth
       />
       <Divider sx={{ height: 28, m: 0.75 }} orientation="vertical" />
       <IconButton aria-label="start ticker analysis" color="info" size="large">
