@@ -1,19 +1,14 @@
 import { ChangeEvent } from "react";
+import { Paper, IconButton, InputBase, Divider } from "@mui/material";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import {
-  Paper,
-  IconButton,
-  InputBase,
-  Divider,
-  Typography,
-} from "@mui/material";
 
 interface InputFormProps {
   value: string;
-  setValue: (v: string) => void;
+  setValue: (value: string) => void;
+  handleSubmit: (event: any) => void;
 }
 
-const InputForm = ({ value, setValue }: InputFormProps) => {
+const InputForm = ({ value, setValue, handleSubmit }: InputFormProps) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
@@ -21,6 +16,7 @@ const InputForm = ({ value, setValue }: InputFormProps) => {
   return (
     <Paper
       component="form"
+      onSubmit={handleSubmit}
       sx={{
         p: "3px 6px",
         display: "flex",
@@ -34,7 +30,7 @@ const InputForm = ({ value, setValue }: InputFormProps) => {
         value={value}
         onChange={handleChange}
       />
-      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+      <Divider sx={{ height: 28, m: 0.75 }} orientation="vertical" />
       <IconButton aria-label="start ticker analysis" color="info" size="large">
         <QueryStatsIcon />
       </IconButton>

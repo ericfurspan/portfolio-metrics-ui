@@ -1,21 +1,41 @@
 import { useState } from "react";
 import { Container, Stack, Typography } from "@mui/material";
+import { wait } from "./utils";
 import InputForm from "./components/InputForm";
-// import InputForm from "./components/InputFormAlt";
 
 function App() {
   const [tickers, setTickers] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  console.log("tickers:", tickers);
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+
+    try {
+      setLoading(true);
+      await wait(2000);
+    } catch (e) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container maxWidth="md" sx={{ pt: 8 }}>
       <Stack spacing={3}>
-        <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="h1">
           Analyze a list of stocks
         </Typography>
 
-        <InputForm value={tickers} setValue={setTickers} />
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <InputForm
+            value={tickers}
+            setValue={setTickers}
+            handleSubmit={handleSubmit}
+          />
+        )}
       </Stack>
     </Container>
   );
