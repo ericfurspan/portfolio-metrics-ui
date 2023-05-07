@@ -1,28 +1,32 @@
 import { useState } from "react";
-import { AppBar, Toolbar, Stack, Typography } from "@mui/material";
-import { InputForm, ResultsTable } from "./components";
+import { AppBar, Toolbar, Stack, Typography, Button } from "@mui/material";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import {
+  ResultsTable,
+  Spinner,
+  SymbolDisplay,
+  SymbolInput,
+} from "./components";
 import { fetchMetrics } from "./api";
 
 /**
  * TODO:
- *  Our standard API call frequency is 5 calls per minute and 500 calls per day.
- *    Please visit https://www.alphavantage.co/premium/ if you would like to target
- *    a higher API call frequency
  * column grouping for ResultsTable: https://mui.com/material-ui/react-table/#column-grouping
  * accept input to set queryFunction
  */
 
 function App() {
-  const [tickers, setTickers] = useState("");
+  const [symbolInput, setSymbolInput] = useState("");
+  const [activeSymbols, setActiveSymbols] = useState<string[]>([]);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event: any) => {
+  const handleStartAnalysis = async (event: any) => {
     event.preventDefault();
 
     try {
       setLoading(true);
-      const response = await fetchMetrics({ symbols: tickers.split(", ") });
+      const response = await fetchMetrics({ symbols: activeSymbols });
       setResults(response);
     } catch (e) {
       console.error(e);
@@ -32,35 +36,73 @@ function App() {
     }
   };
 
+  const handleSubmitSymbol = (event: any) => {
+    event.preventDefault();
+
+    if (activeSymbols.includes(symbolInput)) return setSymbolInput("");
+
+    setActiveSymbols([...activeSymbols, symbolInput]);
+    setSymbolInput("");
+  };
+
+  const handleRemoveSymbol = (ticker: string) => {
+    const updatedSymbols = activeSymbols.filter((t) => t !== ticker);
+    setActiveSymbols(updatedSymbols);
+  };
+
   return (
-    <Stack spacing={4}>
-      <AppBar color="primary" position="sticky">
+    <Stack spacing={3}>
+      <AppBar color="default" position="sticky">
         <Toolbar>
-          <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
+          <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
             Portfolio Metrics
           </Typography>
         </Toolbar>
       </AppBar>
 
-      <Stack alignItems="center" spacing={3} width="100%">
-        <Typography variant="h6" component="h1">
-          Analyze a list of stocks
+      <Stack p={3}>
+        <Typography variant="subtitle1" gutterBottom>
+          Enter up to 5 stock symbols
         </Typography>
 
         {loading ? (
-          <Typography>Loading...</Typography>
+          <Spinner />
         ) : (
           <>
-            <Stack width="100%" maxWidth="sm">
-              <InputForm
-                value={tickers}
-                setValue={setTickers}
-                handleSubmit={handleSubmit}
-              />
+            <Stack spacing={4}>
+              {activeSymbols.length < 5 && (
+                <SymbolInput
+                  value={symbolInput}
+                  setValue={setSymbolInput}
+                  handleSubmit={handleSubmitSymbol}
+                />
+              )}
+
+              <Stack alignItems="flex-start" spacing={3}>
+                {activeSymbols.map((symbol, index) => (
+                  <SymbolDisplay
+                    symbol={symbol}
+                    symbolIndex={index}
+                    onRemove={(symbol) => handleRemoveSymbol(symbol)}
+                  />
+                ))}
+              </Stack>
+
+              {activeSymbols.length > 0 && (
+                <Button
+                  variant="contained"
+                  onClick={handleStartAnalysis}
+                  endIcon={<QueryStatsIcon />}
+                  size="large"
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  Analyze Portfolio
+                </Button>
+              )}
             </Stack>
 
             {results && (
-              <Stack padding={4}>
+              <Stack marginTop={4} padding={4}>
                 <ResultsTable results={results} />
               </Stack>
             )}
