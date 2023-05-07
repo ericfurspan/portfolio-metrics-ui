@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { AppBar, Toolbar, Stack, Typography } from "@mui/material";
-import InputForm from "./components/InputForm";
+import { InputForm, ResultsTable } from "./components";
 import { fetchMetrics } from "./api";
+
+/**
+ * TODO:
+ *  Our standard API call frequency is 5 calls per minute and 500 calls per day.
+ *    Please visit https://www.alphavantage.co/premium/ if you would like to target
+ *    a higher API call frequency
+ * column grouping for ResultsTable: https://mui.com/material-ui/react-table/#column-grouping
+ * accept input to set queryFunction
+ */
 
 function App() {
   const [tickers, setTickers] = useState("");
+  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: any) => {
@@ -12,11 +22,10 @@ function App() {
 
     try {
       setLoading(true);
-
-      const response = await fetchMetrics({ symbols: tickers.split(",") });
-
-      console.log("response", response);
+      const response = await fetchMetrics({ symbols: tickers.split(", ") });
+      setResults(response);
     } catch (e) {
+      console.error(e);
       setLoading(false);
     } finally {
       setLoading(false);
@@ -33,11 +42,7 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      <Stack
-        spacing={3}
-        alignSelf="center"
-        sx={{ width: "100%", maxWidth: "sm", padding: 3 }}
-      >
+      <Stack alignItems="center" spacing={3} width="100%">
         <Typography variant="h6" component="h1">
           Analyze a list of stocks
         </Typography>
@@ -45,11 +50,21 @@ function App() {
         {loading ? (
           <Typography>Loading...</Typography>
         ) : (
-          <InputForm
-            value={tickers}
-            setValue={setTickers}
-            handleSubmit={handleSubmit}
-          />
+          <>
+            <Stack width="100%" maxWidth="sm">
+              <InputForm
+                value={tickers}
+                setValue={setTickers}
+                handleSubmit={handleSubmit}
+              />
+            </Stack>
+
+            {results && (
+              <Stack padding={4}>
+                <ResultsTable results={results} />
+              </Stack>
+            )}
+          </>
         )}
       </Stack>
     </Stack>
