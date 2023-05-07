@@ -1,5 +1,7 @@
+import { QueryFunction } from "./interfaces/QueryFunction";
+
 /**
- * Calls the 'portfolio-metrics-api' serverless function 'metrics' hosted in Netlify
+ * Calls the `portfolio-metrics-api` serverless function 'metrics' hosted in Netlify
  * see: https://app.netlify.com/sites/portfolio-metrics-api/functions
  */
 export const fetchMetrics = async ({
@@ -7,7 +9,7 @@ export const fetchMetrics = async ({
   queryFunction = "OVERVIEW",
 }: {
   symbols: string[];
-  queryFunction?: string;
+  queryFunction?: QueryFunction;
 }) => {
   const response = await fetch(
     "https://portfolio-metrics-api.netlify.app/.netlify/functions/metrics",
