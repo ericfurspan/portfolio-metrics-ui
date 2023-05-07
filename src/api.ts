@@ -7,7 +7,12 @@ export const fetchMetrics = async ({
   queryFunction = "OVERVIEW",
 }: {
   symbols: string[];
-  queryFunction?: string;
+  queryFunction?:
+    | "OVERVIEW"
+    | "INCOME_STATEMENT"
+    | "BALANCE_SHEET"
+    | "CASH_FLOW"
+    | "EARNINGS";
 }) => {
   const response = await fetch(
     "https://portfolio-metrics-api.netlify.app/.netlify/functions/metrics",
