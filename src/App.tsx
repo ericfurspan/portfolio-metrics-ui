@@ -11,8 +11,11 @@ import { fetchMetrics } from "./api";
 
 /**
  * TODO:
- * column grouping for ResultsTable: https://mui.com/material-ui/react-table/#column-grouping
- * accept input to set queryFunction
+ * add a "how it works" section
+ * add input to select queryFunction
+ * input validation/sanitation
+ * table sorting
+ * table column grouping - https://mui.com/material-ui/react-table/#column-grouping
  */
 
 function App() {
@@ -30,7 +33,6 @@ function App() {
       setResults(response);
     } catch (e) {
       console.error(e);
-      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -60,49 +62,54 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      <Stack p={3}>
-        <Typography variant="subtitle1" gutterBottom>
-          Enter up to 5 stock symbols
-        </Typography>
+      <Stack alignItems="flex-start" p={3}>
+        <Typography variant="subtitle2">Enter a symbol</Typography>
 
         {loading ? (
           <Spinner />
         ) : (
           <>
             <Stack spacing={4}>
-              {activeSymbols.length < 5 && (
+              <Stack spacing={1}>
                 <SymbolInput
                   value={symbolInput}
                   setValue={setSymbolInput}
                   handleSubmit={handleSubmitSymbol}
+                  disabled={activeSymbols.length >= 5}
                 />
-              )}
 
-              <Stack alignItems="flex-start" spacing={3}>
-                {activeSymbols.map((symbol, index) => (
-                  <SymbolDisplay
-                    symbol={symbol}
-                    symbolIndex={index}
-                    onRemove={(symbol) => handleRemoveSymbol(symbol)}
-                  />
-                ))}
+                <Typography variant="caption" alignSelf="flex-end">
+                  {`${5 - activeSymbols.length} symbol(s) remaining`}
+                </Typography>
               </Stack>
 
               {activeSymbols.length > 0 && (
-                <Button
-                  variant="contained"
-                  onClick={handleStartAnalysis}
-                  endIcon={<QueryStatsIcon />}
-                  size="large"
-                  sx={{ alignSelf: "flex-start" }}
-                >
-                  Analyze Portfolio
-                </Button>
+                <>
+                  <Stack spacing={3}>
+                    {activeSymbols.map((symbol, index) => (
+                      <SymbolDisplay
+                        key={symbol}
+                        symbol={symbol}
+                        symbolIndex={index}
+                        onRemove={(symbol) => handleRemoveSymbol(symbol)}
+                      />
+                    ))}
+                  </Stack>
+
+                  <Button
+                    variant="contained"
+                    onClick={handleStartAnalysis}
+                    endIcon={<QueryStatsIcon />}
+                    sx={{ alignSelf: "flex-end" }}
+                  >
+                    Analyze
+                  </Button>
+                </>
               )}
             </Stack>
 
             {results && (
-              <Stack marginTop={4} padding={4}>
+              <Stack alignSelf="center" marginTop={4} padding={4}>
                 <ResultsTable results={results} />
               </Stack>
             )}

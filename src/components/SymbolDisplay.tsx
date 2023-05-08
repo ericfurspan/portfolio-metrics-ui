@@ -1,4 +1,4 @@
-import { Stack, IconButton, TextField } from "@mui/material";
+import { IconButton, TextField, InputAdornment } from "@mui/material";
 import DeleteOutlineOutlined from "@mui/icons-material/DeleteOutlineOutlined";
 
 interface SymbolDisplayProps {
@@ -12,23 +12,27 @@ const SymbolDisplay = ({
   onRemove,
 }: SymbolDisplayProps) => {
   return (
-    <Stack direction="row" alignItems="center" spacing={1} key={symbol}>
-      <TextField
-        label={`Symbol ${symbolIndex + 1}`}
-        defaultValue={symbol}
-        InputProps={{ readOnly: true }}
-        variant="standard"
-        size="small"
-      />
-      <IconButton
-        aria-label="remove symbol"
-        color="error"
-        size="small"
-        onClick={() => onRemove(symbol)}
-      >
-        <DeleteOutlineOutlined />
-      </IconButton>
-    </Stack>
+    <TextField
+      label={`Symbol ${symbolIndex + 1}`}
+      defaultValue={symbol}
+      variant="outlined"
+      size="small"
+      InputProps={{
+        readOnly: true,
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="remove symbol"
+              color="error"
+              size="small"
+              onClick={() => onRemove(symbol)}
+            >
+              <DeleteOutlineOutlined />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 };
 
