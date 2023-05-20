@@ -38,10 +38,10 @@ export interface OverviewResults {
   EVToRevenue: string;
   EVToEBITDA: string;
   Beta: string;
-  "52WeekHigh": string;
-  "52WeekLow": string;
-  "50DayMovingAverage": string;
-  "200DayMovingAverage": string;
+  '52WeekHigh': string;
+  '52WeekLow': string;
+  '50DayMovingAverage': string;
+  '200DayMovingAverage': string;
   SharesOutstanding: string;
   DividendDate: Date;
   ExDividendDate: Date;

@@ -1,13 +1,8 @@
-import { useState } from "react";
-import { AppBar, Toolbar, Stack, Typography, Button } from "@mui/material";
-import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import {
-  ResultsTable,
-  Spinner,
-  SymbolDisplay,
-  SymbolInput,
-} from "./components";
-import { fetchMetrics } from "./api";
+import { useState } from 'react';
+import { AppBar, Toolbar, Stack, Typography, Button } from '@mui/material';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import { ResultsTable, Spinner, SymbolDisplay, SymbolInput } from './components';
+import { fetchMetrics } from './api';
 
 /**
  * TODO:
@@ -19,7 +14,7 @@ import { fetchMetrics } from "./api";
  */
 
 function App() {
-  const [symbolInput, setSymbolInput] = useState("");
+  const [symbolInput, setSymbolInput] = useState('');
   const [activeSymbols, setActiveSymbols] = useState<string[]>([]);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -41,10 +36,10 @@ function App() {
   const handleSubmitSymbol = (event: any) => {
     event.preventDefault();
 
-    if (activeSymbols.includes(symbolInput)) return setSymbolInput("");
+    if (activeSymbols.includes(symbolInput)) return setSymbolInput('');
 
     setActiveSymbols([...activeSymbols, symbolInput]);
-    setSymbolInput("");
+    setSymbolInput('');
   };
 
   const handleRemoveSymbol = (ticker: string) => {
@@ -100,7 +95,7 @@ function App() {
                     variant="contained"
                     onClick={handleStartAnalysis}
                     endIcon={<QueryStatsIcon />}
-                    sx={{ alignSelf: "flex-end" }}
+                    sx={{ alignSelf: 'flex-end' }}
                   >
                     Analyze
                   </Button>
